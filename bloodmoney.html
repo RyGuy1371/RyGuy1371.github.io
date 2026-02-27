@@ -1,414 +1,114 @@
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-75RW313KDV"></script>
+<html>
+    <head>
+        <base href="https://cdn.jsdelivr.net/gh/genizy/web-port@main/bloodmoney/">
+        <meta charset="UTF-8">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="viewport" content="user-scalable=no">
+        <link rel="icon" href="icon/icon.png" type="image/png">
+        <link rel="apple-touch-icon" href="icon/icon.png">
+        <link rel="stylesheet" type="text/css" href="fonts/gamefont.css">
+        <title>BLOODMONEY!</title>
+    </head>
+    <body style="background-color: black">
+        <script type="text/javascript" src="js/libs/pixi.js"></script>
+        <script type="text/javascript" src="js/libs/pixi-tilemap.js"></script>
+        <script type="text/javascript" src="js/libs/pixi-picture.js"></script>
+        <script type="text/javascript" src="js/libs/fpsmeter.js"></script>
+        <script type="text/javascript" src="js/libs/lz-string.js"></script>
+        <script type="text/javascript" src="js/libs/iphone-inline-video.browser.js"></script>
+        <script type="text/javascript" src="js/rpg_core.js"></script>
+        <script type="text/javascript" src="js/rpg_managers.js"></script>
+        <script type="text/javascript" src="js/rpg_objects.js"></script>
+        <script type="text/javascript" src="js/rpg_scenes.js"></script>
+        <script type="text/javascript" src="js/rpg_sprites.js"></script>
+        <script type="text/javascript" src="js/rpg_windows.js"></script>
+        <script type="text/javascript" src="js/plugins.js"></script>
+        <script type="text/javascript" src="js/main.js"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
 
-      gtag('config', 'G-75RW313KDV');
+        // support mobile ----------------------------------------------------------------
+        (function() {
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        if (!isMobile) {
+            return;
+        }
+        let i = setInterval(function () {
+            if (window.fullSetupComplete) {
+                let zoneStatic = document.createElement("div");
+                zoneStatic.style = "position: fixed; bottom: 0; left: 0; z-index: 9999; width: 500px; height: 500px;";
+                let internal = document.createElement("div");
+                internal.style = "position: relative; width: 100%; height: 100%;"
+                zoneStatic.appendChild(internal);
+                let joystick = nipplejs.create({
+                    mode: 'semi',
+                    zone: internal,
+                    color: 'red',
+                    catchDistance: 30
+                });
+                setTimeout(function () {
+                    joystick.on("dir", function (e, data) {
+                        let dirs = ["up", "down", "left", "right"];
+                        for (let o of dirs) {
+                            if (o !== data.direction.angle) {
+                                fakeInput.up(o);
+                            } else {
+                                fakeInput.down(o);
+                            }
+                        }
+                    });
+                    joystick.on("end", function () {
+                        let dirs = ["up", "down", "left", "right"];
+                        for (let o of dirs) {
+                            fakeInput.up(o);
+                        }
+                    });
+                }, 100);
+                document.body.appendChild(zoneStatic);
+                const createButton = (text, key, bottom, right, bgColor) => {
+                    let button = document.createElement("div");
+                    button.style = `
+                    position: fixed; 
+                    bottom: ${bottom}; 
+                    right: ${right}; 
+                    width: 10vw; 
+                    height: 10vw; 
+                    background: ${bgColor}; 
+                    color: white; 
+                    touch-action: none; 
+                    z-index: 999999; 
+                    display: flex; 
+                    align-items: center; 
+                    justify-content: center; 
+                    font-family: sans-serif; 
+                    font-size: 3vw;
+                    border-radius: 50%;
+                `;
+                    button.innerText = text;
+                    button.addEventListener("touchstart", function (e) {
+                        e.preventDefault();
+                        fakeInput.down(key);
+                    });
+                    button.addEventListener("touchend", function (e) {
+                        e.preventDefault();
+                        fakeInput.up(key);
+                    });
+                    document.body.appendChild(button);
+                    return button;
+                };
+
+                createButton("OK", "ok", "5vw", "5vw", "#0f08");
+                createButton("ESC", "escape", "5vw", "15vw", "#f008");
+                createButton("TAG", "tag", "15vw", "15vw", "#00f8");
+                createButton("RUN", "shift", "15vw", "5vw", "#f0f8");
+                clearInterval(i);
+            }
+        }, 100);
+        })();
     </script>
-    
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Play Blood Money Game Online Free - No download needed! Experience the thrilling human expenditure program featuring Harvey and Eun-mi. Complete challenges, make moral choices, and compete in the ultimate blood money game adventure. Play the full online version now!">
-    <meta name="keywords" content="blood money, human expenditure program">
-    <meta name="author" content="Blood Money Game">
-    <meta property="og:title" content="Blood Money Game Online - No Download Needed | Harvey & Eun-mi Adventure">
-    <meta property="og:description" content="Play Blood Money Game online free - No download needed! Experience the ultimate human expenditure program with Harvey and Eun-mi. Navigate moral choices and make life-changing decisions in this thrilling online version adventure.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://yourwebsite.com">
-    <title>Blood Money Game Online - No Download Needed | Harvey & Eun-mi Human Expenditure Program</title>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <style>
-        :root {
-            --cute-pink: #FFB6C1;
-            --cute-purple: #DDA0DD;
-            --cute-blue: #87CEEB;
-            --cute-yellow: #F0E68C;
-            --cute-green: #98FB98;
-            --cute-bg: #FFF0F5;
-            --card-bg: rgba(255, 255, 255, 0.9);
-            --border-color: rgba(255, 182, 193, 0.5);
-            --text-dark: #4A4A4A;
-            --text-light: #6B6B6B;
-        }
-
-        body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            background: linear-gradient(180deg, var(--cute-bg) 0%, #FFE4E1 100%);
-            color: var(--text-dark);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-        }
-
-        .hero-section {
-            background: linear-gradient(rgba(255,255,255,0.9), rgba(255,182,193,0.8)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400"><defs><pattern id="hearts" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse"><rect fill="%23FFB6C1" width="40" height="40"/><text fill="%23FF69B4" font-size="20" font-family="Arial" x="20" y="25" text-anchor="middle">♥</text></pattern></defs><rect fill="url(%23hearts)" width="1200" height="400"/><text fill="%23FF1493" font-size="72" font-family="Comic Sans MS" font-weight="bold" x="600" y="200" text-anchor="middle">💕 Blood Money Game 💕</text><text fill="%23937DB" font-size="48" font-family="Comic Sans MS" x="600" y="250" text-anchor="middle">Play with Harvey & Eun-mi!</text></svg>');
-            background-size: cover;
-            background-position: center;
-            padding: 60px 0;
-            text-align: center;
-            border-bottom: 3px solid var(--cute-pink);
-        }
-
-        .game-container {
-            background: var(--card-bg);
-            border: 2px solid var(--cute-pink);
-            border-radius: 20px;
-            padding: 0;
-            margin: 0;
-            box-shadow: 0 0 30px rgba(255, 182, 193, 0.5);
-        }
-
-        .game-iframe {
-            width: 100%;
-            height: 100vh;
-            border: none;
-            display: block;
-        }
-
-        .feature-card {
-            background: var(--card-bg);
-            border: 3px solid var(--cute-pink);
-            border-radius: 25px;
-            padding: 30px;
-            margin: 20px 0;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(255, 182, 193, 0.3);
-        }
-
-        /* Removed hover animation from voting section */
-
-        .btn-custom {
-            background: linear-gradient(45deg, var(--cute-pink), var(--cute-purple));
-            color: white;
-            border: 3px solid var(--cute-blue);
-            padding: 15px 35px;
-            border-radius: 25px;
-            font-weight: bold;
-            font-family: 'Comic Sans MS', cursive;
-            text-transform: none;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            font-size: 1.1em;
-        }
-
-        .btn-custom:hover {
-            background: linear-gradient(45deg, var(--cute-purple), var(--cute-blue));
-            border-color: var(--cute-yellow);
-            color: white;
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 8px 20px rgba(221, 160, 221, 0.4);
-        }
-
-        .leaderboard-table {
-            background: rgba(255,255,255,0.8);
-            border-radius: 20px;
-            overflow: hidden;
-            border: 3px solid var(--cute-pink);
-        }
-
-        .meme-generator {
-            background: rgba(255,255,255,0.9);
-            border-radius: 25px;
-            padding: 30px;
-            margin: 20px 0;
-            border: 3px solid var(--cute-purple);
-        }
-
-        .meme-canvas {
-            border: 3px solid var(--cute-blue);
-            border-radius: 15px;
-            max-width: 100%;
-            background: white;
-        }
-
-        .voting-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .ending-btn {
-            padding: 20px 40px;
-            border: 3px solid white;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Comic Sans MS', cursive;
-            font-size: 1.1em;
-        }
-
-        .ending-good { background: linear-gradient(45deg, var(--cute-green), var(--cute-blue)); color: white; border-color: var(--cute-green); }
-        .ending-normal { background: linear-gradient(45deg, var(--cute-yellow), var(--cute-purple)); color: white; border-color: var(--cute-yellow); }
-        .ending-bad { background: linear-gradient(45deg, var(--cute-pink), var(--cute-purple)); color: white; border-color: var(--cute-pink); }
-
-        .social-share {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .social-btn {
-            padding: 10px 20px;
-            border: 2px solid var(--money-bronze);
-            border-radius: 0;
-            color: var(--money-gold);
-            font-weight: bold;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-family: 'Courier New', monospace;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .social-btn:hover {
-            transform: translateY(-2px);
-            color: white;
-        }
-
-        .twitter { background: #1da1f2; }
-        .reddit { background: #ff4500; }
-        .tiktok { background: #000000; }
-        .discord { background: #5865f2; }
-
-        .comment-section {
-            background: rgba(255,255,255,0.95);
-            border-radius: 25px;
-            padding: 30px;
-            margin: 20px 0;
-            border: 3px solid var(--cute-blue);
-            box-shadow: 0 8px 25px rgba(135, 206, 235, 0.3);
-        }
-
-        .achievement-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255,182,193,0.9);
-            z-index: 1000;
-        }
-
-        .achievement-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            color: var(--text-dark);
-            padding: 40px;
-            border-radius: 25px;
-            text-align: center;
-            max-width: 500px;
-            width: 90%;
-            border: 3px solid var(--cute-pink);
-            box-shadow: 0 8px 30px rgba(255,182,193,0.5);
-        }
-
-        .text-edit-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255,182,193,0.9);
-            z-index: 1001;
-        }
-
-        .text-edit-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            color: var(--text-dark);
-            padding: 30px;
-            border-radius: 25px;
-            max-width: 500px;
-            width: 90%;
-            border: 3px solid var(--cute-purple);
-            box-shadow: 0 8px 30px rgba(221,160,221,0.5);
-        }
-
-        .achievement-image {
-            width: 100%;
-            max-width: 400px;
-            height: 300px;
-            background: linear-gradient(45deg, var(--cute-pink), var(--cute-purple));
-            border-radius: 20px;
-            margin: 20px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 20px;
-            font-weight: bold;
-            font-family: 'Comic Sans MS', cursive;
-            box-shadow: 0 4px 15px rgba(221, 160, 221, 0.3);
-        }
-
-        .share-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .share-buttons .btn {
-            padding: 10px 20px;
-            border-radius: 15px;
-            font-family: 'Comic Sans MS', cursive;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 100px;
-        }
-
-        .btn-download {
-            background: linear-gradient(45deg, #28a745, #20c997);
-            color: white;
-        }
-
-        .btn-download:hover {
-            background: linear-gradient(45deg, #218838, #1ba085);
-            transform: translateY(-2px);
-        }
-
-        .btn-reddit {
-            background: linear-gradient(45deg, #ff4500, #ff6347);
-            color: white;
-        }
-
-        .btn-reddit:hover {
-            background: linear-gradient(45deg, #e03e00, #e74c3c);
-            transform: translateY(-2px);
-        }
-
-        .btn-tiktok {
-            background: linear-gradient(45deg, #000000, #ff0050);
-            color: white;
-        }
-
-        .btn-tiktok:hover {
-            background: linear-gradient(45deg, #1a1a1a, #e60045);
-            transform: translateY(-2px);
-        }
-
-        .btn-twitter {
-            background: linear-gradient(45deg, #1da1f2, #14171a);
-            color: white;
-        }
-
-        .btn-twitter:hover {
-            background: linear-gradient(45deg, #1991db, #0f1419);
-            transform: translateY(-2px);
-        }
-
-        h1, h2, h3 {
-            color: var(--cute-purple);
-            font-weight: bold;
-            font-family: 'Comic Sans MS', cursive;
-            text-transform: none;
-            letter-spacing: 1px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .keyword-density {
-            color: var(--cute-pink);
-            font-weight: bold;
-            font-size: 1.1em;
-        }
-
-        .image-option .placeholder-img:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-        }
-
-        .meme-canvas {
-            cursor: default;
-        }
-
-        .meme-canvas:hover {
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
-
-        .meme-thumbnail {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 15px;
-            border: 3px solid transparent;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .meme-thumbnail:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-    </style>
-</head>
-<body>
-                <!-- Navigation Links -->
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav d-flex flex-row gap-3">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#harvey-memes" style="color: white; font-family: 'Comic Sans MS', cursive; font-weight: bold;">🎭 Harvey Memes</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#player-leaderboard" style="color: white; font-family: 'Comic Sans MS', cursive; font-weight: bold;">🏆 Leaderboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#comment-section" style="color: white; font-family: 'Comic Sans MS', cursive; font-weight: bold;">💬 Discussion</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Game Section -->
-    <section id="game" class="py-0" style="height: 100vh; overflow: hidden;">
-        <div class="container-fluid">
-            <div class="game-container">
-                <div style="position: relative;">
-                    <iframe src="https://bloodmoneygame.io/game/bloodmoney/" class="game-iframe" title="Blood Money Game" id="gameFrame"></iframe>
-                    <!-- Fullscreen button -->
-                    <button onclick="toggleFullscreen()" class="btn btn-custom btn-sm" style="position: absolute; bottom: 20px; right: 120px; z-index: 10; background: rgba(255,255,255,0.9); color: var(--cute-purple); border: 2px solid var(--cute-pink); border-radius: 25px; padding: 8px 15px; font-size: 0.9em;" title="Toggle Fullscreen">
-                    
-                    <!-- Share button in bottom right corner -->
-                    <div style="position: absolute; bottom: 20px; right: 20px; z-index: 10;">
-                        <div class="dropdown">
-                            <button class="btn btn-custom btn-sm" type="button" data-bs-toggle="dropdown" style="background: rgba(255,255,255,0.9); color: var(--cute-purple); border: 2px solid var(--cute-pink); border-radius: 25px; padding: 8px 15px; font-size: 0.9em;">
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Ending Voting Section -->
+    </body>
+</html>
