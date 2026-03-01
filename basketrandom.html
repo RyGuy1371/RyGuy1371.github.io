@@ -2,10 +2,10 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Basket Random | Centered</title>
+    <title>Basket Random | Fixed Center</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        /* 1. Reset everything to prevent the "Right-Shift" */
+        /* 1. Prevent the page from having any 'extra' space */
         body, html {
             margin: 0;
             padding: 0;
@@ -15,20 +15,29 @@
             background-color: #000;
         }
 
-        /* 2. Standard Construct 2 Container Setup */
+        /* 2. Position the game container exactly in the middle */
         #c2canvasdiv {
-            margin: 0 auto;
-            width: 800px; /* Base width */
-            height: 450px; /* Base height */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* This pulls it back to the exact center */
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
+        /* 3. Make sure the canvas stays within the screen bounds */
         canvas {
-            touch-action: none;
-            user-select: none;
-            -webkit-tap-highlight-color: rgba(0,0,0,0);
+            max-width: 100%;
+            max-height: 100%;
+            aspect-ratio: 16 / 9; /* Standard for most web games */
+            image-rendering: pixelated; /* Keeps the game looking sharp */
         }
     </style>
 </head>
+
 <body>
     <div id="c2canvasdiv">
         <canvas id="c2canvas" width="800" height="450">
@@ -40,10 +49,11 @@
     <script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/c2runtime.js"></script>
 
     <script>
-        // Ensure the game is centered on load
-        window.addEventListener("resize", function() {
+        // Force the game to focus so you can play immediately
+        window.onload = function() {
             window.focus();
-        });
+            document.getElementById("c2canvas").focus();
+        };
     </script>
 </body>
 </html>
