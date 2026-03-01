@@ -2,57 +2,41 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Basket Random | Centered</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Basket Random | Clean</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <meta name="generator" content="Construct 3">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/style.css" type="text/css">
+    
     <style>
-        /* 1. Setup the background */
+        /* 1. Centering the game */
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
             overflow: hidden; background-color: #000;
+            display: flex; align-items: center; justify-content: center;
         }
 
-        /* 2. The Ghost Container: This centers the game without the engine knowing */
-        .center-screen {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100vw;
-            height: 100vh;
-        }
+        #fb-root { position: relative; }
 
-        /* 3. The Actual Game Box: Fixed size so it won't go black */
-        #c2canvasdiv {
-            width: 800px; 
-            height: 450px;
-            position: relative; /* Essential for the engine */
-        }
-
-        canvas {
-            width: 800px !important;
-            height: 450px !important;
+        /* 2. Ad-Stripper CSS: Hides ads before they even load */
+        #adsContainer, .adsbygoogle, #preloader-ad, #banner-ad, 
+        [id*="google_ads"], [class*="ad-"], .ads-wrapper, .overlay-ad {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            height: 0 !important;
+            width: 0 !important;
         }
     </style>
-</head>
-<body>
-    <div class="center-screen">
-        <div id="c2canvasdiv">
-            <canvas id="c2canvas" width="800" height="450"></canvas>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/box2d.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/c2runtime.js"></script>
 
     <script>
-        window.addEventListener("load", function() {
-            window.focus();
-            document.getElementById("c2canvas").focus();
-        });
-
-        // Key-lock so the page doesn't jump
+        // 3. Block page movement with keys
         window.addEventListener("keydown", function(e) { 
             if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) { e.preventDefault(); } 
-        }, false);
-    </script>
-</body>
-</html>
+        }, false); 
+
+        // 4. Active Ad-Stripper: Deletes ad elements if they are injected by scripts
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                    if (
