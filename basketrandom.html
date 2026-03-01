@@ -2,58 +2,39 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Basket Random | Fixed Center</title>
+    <title>Basket Random | Fix Freeze</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        /* 1. Prevent the page from having any 'extra' space */
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background-color: #000;
-        }
-
-        /* 2. Position the game container exactly in the middle */
-        #c2canvasdiv {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%); /* This pulls it back to the exact center */
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* 3. Make sure the canvas stays within the screen bounds */
-        canvas {
-            max-width: 100%;
-            max-height: 100%;
-            aspect-ratio: 16 / 9; /* Standard for most web games */
-            image-rendering: pixelated; /* Keeps the game looking sharp */
-        }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #000; }
+        #c2canvasdiv { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+        canvas { width: 100% !important; height: 100% !important; object-fit: contain; }
     </style>
 </head>
-
 <body>
     <div id="c2canvasdiv">
-        <canvas id="c2canvas" width="800" height="450">
-            <h1>Your browser does not support HTML5.</h1>
-        </canvas>
+        <canvas id="c2canvas" width="800" height="450"></canvas>
     </div>
 
     <script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/box2d.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/c2runtime.js"></script>
 
     <script>
-        // Force the game to focus so you can play immediately
-        window.onload = function() {
+        // 1. Fix for Chrome/Safari/GitHub Pages: Resume Audio & Input context on first click
+        function clickToStart() {
+            if (typeof cr_setSuspended !== "undefined") {
+                cr_setSuspended(false);
+            }
             window.focus();
             document.getElementById("c2canvas").focus();
-        };
+        }
+
+        window.addEventListener("mousedown", clickToStart);
+        window.addEventListener("touchstart", clickToStart);
+
+        // 2. Prevent the backspace/arrow keys from breaking the game focus
+        window.addEventListener("keydown", function(e) {
+            if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) e.preventDefault();
+        }, false);
     </script>
 </body>
 </html>
