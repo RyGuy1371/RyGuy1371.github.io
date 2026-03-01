@@ -2,10 +2,10 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Basket Random | Centered</title>
+    <title>Basket Random | Centered Fix</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        /* 1. Reset body and hide scrollbars */
+        /* This setup centers the game without breaking the engine */
         body, html {
             margin: 0;
             padding: 0;
@@ -13,55 +13,39 @@
             height: 100%;
             overflow: hidden;
             background-color: #000;
+            display: grid; /* Using Grid instead of Flex */
+            place-items: center; /* This is the cleanest way to center */
         }
 
-        /* 2. Force the container to the exact middle of the screen */
         #c2canvasdiv {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            /* We remove the 100% width/height here so the engine doesn't stretch into a black void */
+            display: inline-block;
+            position: relative;
         }
 
-        /* 3. Keep the game crisp and fitting the screen */
         canvas {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            image-rendering: pixelated; /* Keeps the pixel art sharp */
+            /* This ensures the game stays visible and sharp */
+            max-width: 100vw;
+            max-height: 100vh;
+            image-rendering: pixelated;
         }
     </style>
 </head>
 <body>
     <div id="c2canvasdiv">
-        <canvas id="c2canvas" width="800" height="450">
-            <h1>Your browser does not support HTML5.</h1>
-        </canvas>
+        <canvas id="c2canvas" width="800" height="450"></canvas>
     </div>
 
     <script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/box2d.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/c2runtime.js"></script>
 
     <script>
-        // Force focus so keys work immediately
         window.addEventListener("load", function() {
             window.focus();
-            const canvas = document.getElementById("c2canvas");
-            canvas.focus();
-            
-            // Fix for freezing: Audio and logic resume on first click
-            document.addEventListener("mousedown", () => {
-                window.focus();
-                canvas.focus();
-            }, { once: true });
+            document.getElementById("c2canvas").focus();
         });
 
-        // Prevent page from moving when using arrow keys
+        // Block scrolling so you don't lose focus
         window.addEventListener("keydown", function(e) { 
             if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) { e.preventDefault(); } 
         }, false);
