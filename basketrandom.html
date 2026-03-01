@@ -1,17 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Basket Random (Clean & Fullscreen)</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/style.css" type="text/css">
+    <title>Basket Random | Clean Port</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background-color: #000; overflow: hidden; }
+        /* Force the body to be a rigid, non-scrolling container */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            overflow: hidden;
+            position: fixed; /* Prevents "pull-to-refresh" on mobile */
+        }
 
-        /* The Game Container handles the Fullscreen without crashing the JS engine */
-        #game-container {
-            position: relative;
+        /* This container acts as the "Fake Fullscreen" */
+        #game-area {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100vw;
             height: 100vh;
             display: flex;
@@ -19,72 +29,37 @@
             align-items: center;
         }
 
-        canvas { width: 100% !important; height: 100% !important; }
-
-        /* Fullscreen Button Styling */
-        #fs-btn {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            z-index: 999;
-            padding: 10px 15px;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 1px solid #fff;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: sans-serif;
-            transition: 0.3s;
+        /* Ensures the game canvas fills the screen without breaking aspect ratio */
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain;
         }
-        #fs-btn:hover { background: rgba(255, 255, 255, 0.5); }
 
-        /* Ad-Stripper CSS */
-        #adsContainer, .adsbygoogle, #preloader-ad, #banner-ad, [id*="google_ads"], [class*="ad-"], .ads-wrapper {
-            display: none !important; opacity: 0 !important; height: 0 !important;
+        /* Ad-Blocker CSS */
+        #adsContainer, .adsbygoogle, [id*="google_ads"], .ads-wrapper {
+            display: none !important;
+            visibility: hidden !important;
         }
     </style>
 
     <script>
-        // Fullscreen Logic: Targets the container to prevent game crash
-        function toggleFullscreen() {
-            let elem = document.getElementById("game-container");
-            if (!document.fullscreenElement) {
-                elem.requestFullscreen().catch(err => {
-                    alert(`Error attempting to enable full-screen mode: ${err.message}`);
-                });
-            } else {
-                document.exitFullscreen();
+        // Prevent default browser keys from scrolling or crashing focus
+        window.addEventListener("keydown", function(e) {
+            if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+                e.preventDefault();
             }
-        }
-
-        // Prevent scrolling
-        window.addEventListener("keydown", function(e) { 
-            if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) { e.preventDefault(); } 
         }, false);
 
-        // Ad-Stripper Mutation Observer
-        const observer = new MutationObserver(((mutations) => {
-            mutations.forEach((mutation) => {
-                mutation.addedNodes.forEach((node) => {
-                    if (node.id && (node.id.includes('ad') || node.id.includes('google'))) node.remove();
-                    if (node.className && typeof node.className === 'string' && node.className.includes('ad')) node.remove();
-                });
-            });
-        }));
-        observer.observe(document.documentElement, { childList: true, subtree: true });
+        // This intercepts the "Fullscreen" error before it crashes the game
+        window.onerror = function(message, source, lineno, colno, error) {
+            if (message.includes("fullscreen")) {
+                console.log("Caught fullscreen error - preventing crash.");
+                return true; 
+            }
+        };
     </script>
 </head>
-
 <body>
-    <div id="game-container">
-        <button id="fs-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
-        <div id="fb-root"></div>
-        
-        <script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/box2d.js"></script>
-        <script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/suppoortcheck.js"></script>
-        <script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/offclient.js" type="module"></script>
-        <script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/main.js" type="module"></script>
-        <script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/basket-random.js"></script>
-    </div>
-</body>
-</html>
+
+    <div id="game-area
