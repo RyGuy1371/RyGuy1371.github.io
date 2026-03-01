@@ -5,7 +5,6 @@
     <title>Basket Random | Centered Fix</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        /* This setup centers the game without breaking the engine */
         body, html {
             margin: 0;
             padding: 0;
@@ -13,27 +12,39 @@
             height: 100%;
             overflow: hidden;
             background-color: #000;
-            display: grid; /* Using Grid instead of Flex */
-            place-items: center; /* This is the cleanest way to center */
         }
 
+        /* This wrapper forces the game to the center without 'flex' breaking the engine */
         #c2canvasdiv {
-            /* We remove the 100% width/height here so the engine doesn't stretch into a black void */
-            display: inline-block;
-            position: relative;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 800px;  /* Match your canvas width */
+            height: 450px; /* Match your canvas height */
+            margin-left: -400px; /* Half of width */
+            margin-top: -225px;  /* Half of height */
         }
 
         canvas {
-            /* This ensures the game stays visible and sharp */
-            max-width: 100vw;
-            max-height: 100vh;
-            image-rendering: pixelated;
+            width: 800px;
+            height: 450px;
+            user-select: none;
+            touch-action: none;
+        }
+
+        /* Mobile fix: If screen is small, scale the whole div */
+        @media (max-width: 800px), (max-height: 450px) {
+            #c2canvasdiv {
+                transform: scale(0.5); /* Shrinks it to fit smaller screens */
+            }
         }
     </style>
 </head>
 <body>
     <div id="c2canvasdiv">
-        <canvas id="c2canvas" width="800" height="450"></canvas>
+        <canvas id="c2canvas" width="800" height="450">
+            <h1>Your browser does not support HTML5.</h1>
+        </canvas>
     </div>
 
     <script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/box2d.js"></script>
@@ -45,7 +56,7 @@
             document.getElementById("c2canvas").focus();
         });
 
-        // Block scrolling so you don't lose focus
+        // Prevents arrow keys from moving the browser window
         window.addEventListener("keydown", function(e) { 
             if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) { e.preventDefault(); } 
         }, false);
