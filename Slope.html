@@ -1,83 +1,114 @@
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
 <!DOCTYPE html>
-<html>
+<html lang="en-us">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Classes</title>
-    <link rel="icon" type="image/png" href="https://ssl.gstatic.com/classroom/favicon.png" />
-    
+    <base href="https://cdn.jsdelivr.net/gh/gn-math/assets@51462750d29b68ac1e33887c1bf13d9c478d5ead/198/">
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | Slope Plus</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
     <style>
-        body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            overflow: hidden; background-color: #000;
-            display: flex; align-items: center; justify-content: center;
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100%;
+            width: 100%;
         }
 
-        #gameContainer {
-            width: 100vw;
-            height: 100vh;
-        }
-
-        canvas {
-            width: 100% !important;
-            height: 100% !important;
-            display: block;
-        }
-
-        #loader {
+        #unity-container {
+            width: 100%;
+            height: 100%;
             position: absolute;
-            color: #fff;
-            font-family: sans-serif;
-            text-align: center;
-            z-index: 20;
+            top: 0;
+            left: 0;
         }
-
-        button {
-            padding: 15px 40px;
-            font-size: 24px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover { background: #45a049; }
     </style>
+    <script src="TemplateData/UnityProgress.js"></script>
+    <script src="Build/UnityLoader.js"></script>
+    <script>
+        function mergeFiles(fileParts) {
+            return new Promise((resolve, reject) => {
+                let buffers = [];
 
-    <script src="https://cdn.jsdelivr.net/gh/scheng123321/tmm-html5-cdn1@51a72f0faa2d9cd524a0c11b4ca368350f988458/slope/TemplateData/unityloader41.js"></script>
+                function fetchPart(index) {
+                    if (index >= fileParts.length) {
+                        let mergedBlob = new Blob(buffers);
+                        let mergedFileUrl = URL.createObjectURL(mergedBlob);
+                        resolve(mergedFileUrl);
+                        return;
+                    }
+                    fetch(fileParts[index]).then((response) => response.arrayBuffer()).then((data) => {
+                        buffers.push(data);
+                        fetchPart(index + 1);
+                    }).catch(reject);
+                }
+                fetchPart(0);
+            });
+        }
+
+        function getParts(file, start, end) {
+            let parts = [];
+            for (let i = start; i <= end; i++) {
+                parts.push(file + ".part" + i);
+            }
+            return parts;
+        }
+
+        window.addEventListener('resize', resizeGameContainer);
+
+        function resizeGameContainer() {
+            const container = document.getElementById('gameContainer');
+            if (container) {
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+                container.style.width = `${width}px`;
+                container.style.height = `${height}px`;
+            }
+        }
+
+        window.onload = function () {
+            resizeGameContainer();
+
+            Promise.all([
+                mergeFiles(getParts("https://cdn.jsdelivr.net/gh/gn-math/assets@51462750d29b68ac1e33887c1bf13d9c478d5ead/198/Build/WEB1.2.1.data.unityweb", 1, 2))
+            ]).then(([dataUrl]) => {
+                let json = {
+                    companyName: "Slope Plus",
+                    productName: "Slope Plus",
+                    dataUrl: dataUrl,
+                    wasmCodeUrl: "https://cdn.jsdelivr.net/gh/gn-math/assets@51462750d29b68ac1e33887c1bf13d9c478d5ead/198/Build/WEB1.2.1.wasm.code.unityweb",
+                    wasmFrameworkUrl: "https://cdn.jsdelivr.net/gh/gn-math/assets@51462750d29b68ac1e33887c1bf13d9c478d5ead/198/Build/WEB1.2.1.wasm.framework.unityweb",
+                    TOTAL_MEMORY: 268435456,
+                    graphicsAPI: ["WebGL 2.0", "WebGL 1.0"],
+                    webglContextAttributes: {
+                        preserveDrawingBuffer: false
+                    },
+                    splashScreenStyle: "Dark",
+                    backgroundColor: "#000000"
+                }
+                let blob = new Blob([JSON.stringify(json)], {
+                    type: 'application/json'
+                });
+                let blobUrl = URL.createObjectURL(blob);
+                UnityLoader.instantiate("gameContainer", json, {
+                    onProgress: UnityProgress,
+                    url: blobUrl
+                });
+            });
+        };
+    </script>
 </head>
 
 <body>
-    <div id="loader">
-        <button id="play-btn" onclick="initGame()">Click to Load Slope</button>
-        <p id="status-text" style="display:none;">Downloading Game Data... (This may take 30s)</p>
+    <div class="webgl-content">
+        <div id="gameContainer"></div>
     </div>
-
-    <div id="gameContainer"></div>
-
-    <script>
-        function initGame() {
-            document.getElementById("play-btn").style.display = "none";
-            document.getElementById("status-text").style.display = "block";
-            
-            // Unity WebGL Loader Configuration
-            var gameInstance = UnityLoader.instantiate(
-                "gameContainer", 
-                "https://cdn.jsdelivr.net/gh/scheng123321/tmm-html5-cdn1@51a72f0faa2d9cd524a0c11b4ca368350f988458/slope/Build/slope.json", 
-                {
-                    onProgress: function(instance, progress) {
-                        if (progress === 1) {
-                            document.getElementById("loader").style.display = "none";
-                        }
-                    }
-                }
-            );
-        }
-
-        // Prevent keys from scrolling
-        window.addEventListener("keydown", function(e) {
-            if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) e.preventDefault();
-        }, false);
-    </script>
 </body>
+
 </html>
