@@ -1,65 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Basket Random | Clean Port</title>
+    <title>Basket Random | Clean Mirror</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/style.css" type="text/css">
+    
     <style>
-        /* Force the body to be a rigid, non-scrolling container */
-        html, body {
+        /* GitHub Pages full-screen setup */
+        body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: #000;
             overflow: hidden;
-            position: fixed; /* Prevents "pull-to-refresh" on mobile */
-        }
-
-        /* This container acts as the "Fake Fullscreen" */
-        #game-area {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            background-color: #000;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
         }
 
-        /* Ensures the game canvas fills the screen without breaking aspect ratio */
         canvas {
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: contain;
+            touch-action: none;
+            user-select: none;
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
         }
 
-        /* Ad-Blocker CSS */
-        #adsContainer, .adsbygoogle, [id*="google_ads"], .ads-wrapper {
+        /* Ad-Stripper Styles */
+        #adsContainer, .adsbygoogle, #preloader-ad, #banner-ad, [id*="google_ads"], [class*="ad-"], .ads-wrapper {
             display: none !important;
             visibility: hidden !important;
         }
     </style>
 
     <script>
-        // Prevent default browser keys from scrolling or crashing focus
-        window.addEventListener("keydown", function(e) {
-            if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-                e.preventDefault();
-            }
+        // Prevent scrolling while playing
+        window.addEventListener("keydown", function(e) { 
+            if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) { e.preventDefault(); } 
         }, false);
 
-        // This intercepts the "Fullscreen" error before it crashes the game
-        window.onerror = function(message, source, lineno, colno, error) {
-            if (message.includes("fullscreen")) {
-                console.log("Caught fullscreen error - preventing crash.");
-                return true; 
-            }
-        };
+        // Active Mutation Observer to keep the GitHub Page clean
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.id && (node.id.includes('ad') || node.id.includes('google'))) node.remove();
+                    if (node.className && typeof node.className === 'string' && node.className.includes('ad')) node.remove();
+                });
+            });
+        });
+        observer.observe(document.documentElement, { childList: true, subtree: true });
     </script>
 </head>
-<body>
 
-    <div id="game-area
+<body>
+    <div id="c2canvasdiv">
+        <canvas id="c2canvas" width="800" height="450">
+            <h1>Your browser does not appear to support HTML5.</h1>
+        </canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/box2d.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/suppoortcheck.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/offclient.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/main.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/c2runtime.js"></script>
+</body>
+</html>
