@@ -1,0 +1,61 @@
+<div style="text-align: center; margin-top: 20px;">
+  <button id="fullscreen-btn" onclick="openGame()">
+    PLAY IN FULLSCREEN
+  </button>
+</div>
+
+<style>
+  #fullscreen-btn {
+    /* Size and Shape */
+    padding: 20px 40px;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 50px; /* Makes it rounded */
+    
+    /* Colors and Border */
+    background-color: #1a73e8; /* Google Blue */
+    color: white;
+    border: none;
+    cursor: pointer;
+    
+    /* Effects */
+    transition: all 0.3s ease; /* Smooth transition for hover */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  /* Hover Effect: Changes color and lifts up when you mouse over it */
+  #fullscreen-btn:hover {
+    background-color: #1557b0;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  }
+
+  /* Click Effect: Sinks down slightly when clicked */
+  #fullscreen-btn:active {
+    transform: translateY(1px);
+  }
+</style>
+
+<script>
+function openGame() {
+  // Replace the link below with the ACTUAL game URL
+  var gameUrl = "https://ryguy1371.github.io/drifthunters.html"; 
+
+  var win = window.open();
+  win.document.body.style.margin = '0';
+  win.document.body.style.height = '100vh';
+  win.document.body.style.backgroundColor = 'black'; // Looks better for games
+  
+  var iframe = win.document.createElement('iframe');
+  iframe.style.border = 'none';
+  iframe.style.width = '100%';
+  iframe.style.height = '100%';
+  iframe.style.margin = '0';
+  iframe.src = gameUrl;
+  
+  win.document.body.appendChild(iframe);
+}
+</script>
